@@ -5,10 +5,6 @@
 #include <Arduino.h>
 #include "motor\motor_control.h"
 
-#ifdef LED_MATRIX
-#include "led_matrix\led_matrix_display.h"
-#endif // #ifdef LED_MATRIX
-
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -38,24 +34,15 @@ void set_status_information(void)
   switch (active_movement)
   {
     case MOVING_OFF:
-#ifdef LED_MATRIX
-      set_led_matrix_stop();
-#endif // #ifdef LED_MATRIX
       Serial.println("OFF;");
       break;
     case MOVING_LEFT:
-#ifdef LED_MATRIX
-      set_led_matrix_forward();
-#endif // #ifdef LED_MATRIX
       Serial.print("LEFT; motor_speed_set: ");
       Serial.print(act_speed_setpoint);
       Serial.print("; motor_speed_act: ");
       Serial.println(act_speed);
       break;
     case MOVING_RIGHT:
-#ifdef LED_MATRIX
-      set_led_matrix_backward();
-#endif // #ifdef LED_MATRIX
       Serial.print("RIGHT; motor_speed_set: ");
       Serial.print(act_speed_setpoint);
       Serial.print("; motor_speed_act: ");
@@ -69,9 +56,6 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-#ifdef LED_MATRIX
-  setup_led_matrix();
-#endif // #ifdef LED_MATRIX
   setup_motor_pins();
 
 }
