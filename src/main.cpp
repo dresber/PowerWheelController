@@ -1,14 +1,27 @@
 // ------------------------------------------------ //
 //                     imports
 // ------------------------------------------------ //
-#include "project_config.h"
 #include <Arduino.h>
-#include "motor\motor_control.h"
+
+#include "project_config.h"
+
+#ifdef COMM
+#include "comm/comm.h"
+#endif // #ifdef COMM
+
+#ifdef DEBUG
+#include "debug/debug.h"
+#endif // #ifdef DEBUG
+
+//#include "motor\motor_control.h"
 
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
-
+#define TASK_1_PROCESS_TIME 10
+#define TASK_2_PROCESS_TIME 100
+#define TASK_3_PROCESS_TIME 500
+#define TASK_4_PROCESS_TIME 1000
 
 // ------------------------------------------------ //
 //                  type definitions
@@ -23,85 +36,80 @@
 // ------------------------------------------------ //
 //              function prototypes
 // ------------------------------------------------ //
-void set_status_information(void)
+void setup() 
 {
-  ActiveMoving active_movement = get_actual_movement();
-  
-  int act_speed = get_actual_speed();
-  int act_speed_setpoint = get_actual_speed_setpoint();
-
-  Serial.print("motor_direction: ");
-  switch (active_movement)
-  {
-    case MOVING_OFF:
-      Serial.println("OFF;");
-      break;
-    case MOVING_LEFT:
-      Serial.print("LEFT; motor_speed_set: ");
-      Serial.print(act_speed_setpoint);
-      Serial.print("; motor_speed_act: ");
-      Serial.println(act_speed);
-      break;
-    case MOVING_RIGHT:
-      Serial.print("RIGHT; motor_speed_set: ");
-      Serial.print(act_speed_setpoint);
-      Serial.print("; motor_speed_act: ");
-      Serial.println(act_speed);
-      break;
-  }
-}
-
-void setup() {
-  Serial.begin(9600);
-
   pinMode(LED_BUILTIN, OUTPUT);
 
-  setup_motor_pins();
+#ifdef COMM
+  setup_comm_serial();
+#endif //#ifdef COMM
+
+#ifdef DEBUG
+  setup_debug_pins();
+  DEBUG_OUTPUT.println("PowerWheelStarted");
+#endif // #ifdef DEBUG
+
+//  setup_motor_pins();
 
 }
 
 
-void loop() {
-  int process_cnt = 0;
-  int motor_cnt = 0;
-  int status_cnt = 0;
+void loop() 
+{
+  static int cnt_task1 = 0;
+  static int cnt_task2 = 0;
+  static int cnt_task3 = 0;
+  static int cnt_task4 = 0;
 
-  Serial.println("PowerWheelControl");
+#ifdef DEBUG_MAIN
+  digitalWrite(MAIN_LOOP, HIGH);
+#endif // #ifdef DEBUG_MAIN
 
-  while (true)
+#ifdef COMM
+  process_serial_rx();
+#endif // #ifdef COMM
+
+  if (cnt_task1 >= TASK_1_PROCESS_TIME)
   {
-    process_motor_inputs();
-
-    if (motor_cnt >= 10)
-    {
-      process_motor_outputs();
-      motor_cnt = 0;
-    }
-
-    if (process_cnt >= 50)
-    {
-      if (get_actual_movement() != MOVING_OFF)
-      {
-        digitalWrite(LED_BUILTIN, !(digitalRead(LED_BUILTIN)));
-      }
-      else
-      {
-        digitalWrite(LED_BUILTIN, LOW);
-      }
-
-      process_cnt = 0;
-
-    }
-
-    if (status_cnt >= 100)
-    {
-      set_status_information();
-      status_cnt = 0;
-    }
-
-    process_cnt += 1;
-    motor_cnt += 1;
-    status_cnt += 1;
-    delay(10);
+    cnt_task1 = 0;
   }
+  else
+  {
+    cnt_task1++;
+  }
+
+
+  if (cnt_task2 >= TASK_2_PROCESS_TIME)
+  {
+    cnt_task2 = 0;
+  }
+  else
+  {
+    cnt_task2++;
+  }
+
+  if (cnt_task3 >= TASK_3_PROCESS_TIME)
+  {
+    cnt_task3 = 0;
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+  }
+  else
+  {
+    cnt_task3++;
+  }
+
+  if (cnt_task4 >= TASK_4_PROCESS_TIME)
+  {
+    cnt_task4 = 0;
+  }
+  else
+  {
+    cnt_task4++;
+  }
+
+#ifdef DEBUG_MAIN
+  digitalWrite(MAIN_LOOP, LOW);
+#endif // #ifdef DEBUG_MAIN
+
+  delay(1);
 }
