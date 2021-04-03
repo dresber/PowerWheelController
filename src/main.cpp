@@ -13,15 +13,20 @@
 #include "debug/debug.h"
 #endif // #ifdef DEBUG
 
+#ifdef CAR_DISPLAY
+#include "display/display.h"
+#endif // #ifdef CAR_DISPLAY
+
 //#include "motor\motor_control.h"
 
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
 #define TASK_1_PROCESS_TIME 10
-#define TASK_2_PROCESS_TIME 100
-#define TASK_3_PROCESS_TIME 500
-#define TASK_4_PROCESS_TIME 1000
+#define TASK_2_PROCESS_TIME 50
+#define TASK_3_PROCESS_TIME 100
+#define TASK_4_PROCESS_TIME 500
+#define TASK_5_PROCESS_TIME 500
 
 // ------------------------------------------------ //
 //                  type definitions
@@ -49,6 +54,10 @@ void setup()
   DEBUG_OUTPUT.println("PowerWheelStarted");
 #endif // #ifdef DEBUG
 
+#ifdef CAR_DISPLAY
+  setup_display();
+#endif // #ifdef CAR_DISPLAY
+
 //  setup_motor_pins();
 
 }
@@ -60,6 +69,7 @@ void loop()
   static int cnt_task2 = 0;
   static int cnt_task3 = 0;
   static int cnt_task4 = 0;
+  static int cnt_task5 = 0;
 
 #ifdef DEBUG_MAIN
   digitalWrite(MAIN_LOOP, HIGH);
@@ -101,10 +111,22 @@ void loop()
   if (cnt_task4 >= TASK_4_PROCESS_TIME)
   {
     cnt_task4 = 0;
+#ifdef CAR_DISPLAY
+    update_display();
+#endif // #ifdef CAR_DISPLAY
   }
   else
   {
     cnt_task4++;
+  }
+
+  if (cnt_task5 >= TASK_5_PROCESS_TIME)
+  {
+    cnt_task5 = 0;
+  }
+  else
+  {
+    cnt_task5++;
   }
 
 #ifdef DEBUG_MAIN

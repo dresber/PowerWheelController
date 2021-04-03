@@ -29,6 +29,11 @@
 #endif // #ifdef DEBUG_COMM
 
 #endif // #ifdef DEBUG
+
+#define CAR_DISPLAY
+#ifdef CAR_DISPLAY
+
+#endif // #ifdef CAR_DISPLAY
 // ------------------------------------------------ //
 //                     debug
 // ------------------------------------------------ //
