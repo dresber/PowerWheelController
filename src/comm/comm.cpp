@@ -3,6 +3,10 @@
 // ------------------------------------------------ //
 #include "comm/comm.h"
 
+#ifdef SAFETY
+#include "safety/safety.h"
+#endif // #ifdef SAFETY
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -116,9 +120,32 @@ void process_command(char cmd_buffer[])
     {
         if(cmd_string == "wdg_trig")
         {
+#ifdef SAFETY
+            trigger_remote_wdg();
 #ifdef DEBUG_COMM
             DEBUG_OUTPUT.println("watchdog triggered");
 #endif // #ifdef DEBUG_COMM
+        }
+        else if(cmd_string == "em_stop")
+        {
+            set_emergency_stop();
+        }
+        else if(cmd_string == "em_res")
+        {
+            reset_emergency_stop();
+        }
+        else if(cmd_string == "rem_con")
+        {
+            set_remote_state(CONTROL);
+        }
+        else if (cmd_string == "rem_mon")
+        {
+            set_remote_state(MONITOR);
+        }
+        else if (cmd_string == "rem_off")
+        {
+            set_remote_state(OFF);
+#endif // #ifdef SAFETY
         }
     }
     else
@@ -138,9 +165,9 @@ void process_serial_rx(void)
     static int cmd_index = 0;
     static char rx_cmd[MAX_SIZE_OF_CMD];
 
-#ifdef DEBUG
+#ifdef DEBUG_COMM
     digitalWrite(SERIAL_RX_TASK_PIN, HIGH);
-#endif // #ifdef DEBUG
+#endif // #ifdef DEBUG_COMM
 
     while(COMM_OUTPUT.available()) {
 
@@ -166,8 +193,8 @@ void process_serial_rx(void)
             }
         }
     }
-#ifdef DEBUG
+#ifdef DEBUG_COMM
     digitalWrite(SERIAL_RX_TASK_PIN, LOW);
-#endif // #ifdef DEBUG
+#endif // #ifdef DEBUG_COMM
 
 }
