@@ -5,6 +5,10 @@
 
 #include "project_config.h"
 
+#ifdef CAR_DISPLAY
+#include "display/display.h"
+#endif // #ifdef CAR_DISPLAY
+
 #ifdef COMM
 #include "comm/comm.h"
 #endif // #ifdef COMM
@@ -13,9 +17,9 @@
 #include "debug/debug.h"
 #endif // #ifdef DEBUG
 
-#ifdef CAR_DISPLAY
-#include "display/display.h"
-#endif // #ifdef CAR_DISPLAY
+#ifdef SAFETY
+#include "safety/safety.h"
+#endif // #ifdef SAFETY
 
 //#include "motor\motor_control.h"
 
@@ -49,6 +53,15 @@ void setup()
   setup_comm_serial();
 #endif //#ifdef COMM
 
+#ifdef SAFETY
+  setup_safety();
+#else
+  pinMode(MOTOR_ENABLE_LEFT, OUTPUT);
+  pinMode(MOTOR_ENABLE_RIGHT, OUTPUT);
+  digitalWrite(MOTOR_ENABLE_LEFT, HIGH);
+  digitalWrite(MOTOR_ENABLE_RIGHT, HIGH);
+#endif // #ifdef SAFETY
+
 #ifdef DEBUG
   setup_debug_pins();
   DEBUG_OUTPUT.println("PowerWheelStarted");
@@ -81,6 +94,9 @@ void loop()
 
   if (cnt_task1 >= TASK_1_PROCESS_TIME)
   {
+#ifdef SAFETY
+    process_safety();
+#endif // #ifdef SAFETY
     cnt_task1 = 0;
   }
   else
