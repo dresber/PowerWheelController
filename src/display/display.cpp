@@ -10,6 +10,10 @@
 #include "safety/safety.h"
 #endif // #ifdef SAFETY
 
+#ifdef POWER_MONITOR
+#include "sensors/voltage_monitor.h"
+#endif // #ifdef POWER_MONITOR
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -33,6 +37,10 @@ static void print_arrow_forward(void);
 static void print_safety_state(void);
 static void print_remote_state(void);
 #endif // #ifdef SAFETY
+
+#ifdef POWER_MONITOR
+static void _print_power_level(void);
+#endif // #ifdef POWER_MONITOR
 
 static void _add_custom_char(CustomChar custom_char);
 
@@ -71,6 +79,10 @@ void update_display(void)
     print_safety_state();
     print_remote_state();
 #endif // #ifdef SAFETY
+
+#ifdef POWER_MONITOR
+    _print_power_level();
+#endif // #ifdef POWER_MONITOR
 
 }
 
@@ -135,6 +147,15 @@ static void print_remote_state(void)
 }
 #endif // #ifdef SAFETY
 
+#ifdef POWER_MONITOR
+static void _print_power_level(void)
+{
+    lcd.setCursor(19, 0);
+    lcd.print("%");
+    lcd.setCursor(15, 0);
+    lcd.print(get_actual_power_level());
+}
+#endif // #ifdef POWER_MONITOR
 
 static void _add_custom_char(CustomChar custom_char)
 {

@@ -1,22 +1,24 @@
-#ifndef distance_H
-#define distance_H
+#ifndef voltage_H
+#define voltage_H
 // ------------------------------------------------ //
 //                     imports
 // ------------------------------------------------ //
 #include "project_config.h"
-#include <Ultrasonic.h>
 #include <Arduino.h>
 
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
-#define FRONT_1_TRIG_PIN 42
-#define FRONT_1_SENS_PIN 43
-#define FRONT_2_TRIG_PIN 44
-#define FRONT_2_SENS_PIN 45
-#define BACK_TRIG_PIN 46
-#define BACK_SENS_PIN 47
+#define MAIN_POWER_PIN A0
 
+#define MAIN_POWER_MAX_VOLTAGE 14000
+#define MAIN_POWER_MIN_VOLTAGE 11000
+
+#define ADC_RESOLUTION 1024
+#define ADC_VOLTAGE_IN_UV 5000000
+
+#define R1_VALUE 10000
+#define R2_VALUE 2200
 
 // ------------------------------------------------ //
 //                  type definitions
@@ -25,19 +27,12 @@
 // ------------------------------------------------ //
 //                  global vars
 // ------------------------------------------------ //
-#ifdef DISTANCE_SENSOR_FRONT_1
-Ultrasonic front_sensor_1(FRONT_1_TRIG_PIN, FRONT_1_SENS_PIN);
-#endif // #ifdef DISTANCE_SENSOR_FRONT_1
-#ifdef DISTANCE_SENSOR_FRONT_2
-Ultrasonic front_sensor_2(FRONT_2_TRIG_PIN, FRONT_2_SENS_PIN);
-#endif // #ifdef DISTANCE_SENSOR_FRONT_2
-#ifdef DISTANCE_SENSOR_BACK	
-Ultrasonic back_sensor(BACK_TRIG_PIN, BACK_SENS_PIN);
-#endif // #ifdef DISTANCE_SENSOR_BACK	
+
 
 // ------------------------------------------------ //
 //              function prototypes
 // ------------------------------------------------ //
+int16_t get_actual_power_level(void);
 
 
-#endif // #ifndef distance_H
+#endif // #ifndef voltage_H

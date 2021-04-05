@@ -33,16 +33,20 @@
 #define SERIAL_RX_TASK_PIN DEBUG_PIN_2
 #endif // #ifdef DEBUG_COMM
 //#define DEBUG_DISTANCE
+//#define DEBUG_POWER_MONITOR
 #endif // #ifdef DEBUG
+
+#define DISTANCE_SENSOR_FRONT_1
+//#define DISTANCE_SENSOR_FRONT_2
+//#define DISTANCE_SENSOR_BACK
 
 #define SAFETY
 #ifdef SAFETY
 #define WDG_TRIG_TIMEOUT_MILLIS_MAX 210
 #endif // #ifdef SAFETY
 
-#define DISTANCE_SENSOR_FRONT_1
-//#define DISTANCE_SENSOR_FRONT_2
-//#define DISTANCE_SENSOR_BACK
+#define POWER_MONITOR
+
 
 // ------------------------------------------------ //
 //                   PINNING
