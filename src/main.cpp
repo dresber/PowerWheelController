@@ -21,6 +21,10 @@
 #include "safety/safety.h"
 #endif // #ifdef SAFETY
 
+#ifdef DEBUG_DISTANCE
+#include "sensors/distance.h"
+#endif // #ifdef DEBUG_DISTANCE
+
 //#include "motor\motor_control.h"
 
 // ------------------------------------------------ //
@@ -138,6 +142,11 @@ void loop()
 
   if (cnt_task5 >= TASK_5_PROCESS_TIME)
   {
+#ifdef DEBUG_DISTANCE
+    DEBUG_OUTPUT.print("front_1: ");
+    DEBUG_OUTPUT.print(front_sensor_1.read());
+    DEBUG_OUTPUT.println(" cm");
+#endif // #ifdef DEBUG_DISTANCE
     cnt_task5 = 0;
   }
   else
