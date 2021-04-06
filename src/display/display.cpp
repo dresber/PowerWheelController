@@ -6,6 +6,10 @@
 #include <Wire.h>
 #include "display/custom_chars.h"
 
+#ifdef ADDONS_CONTROL
+#include "control/addons_control.h"
+#endif // #ifdef ADDONS_CONTROL
+
 #ifdef SAFETY
 #include "safety/safety.h"
 #endif // #ifdef SAFETY
@@ -42,6 +46,10 @@ static void print_remote_state(void);
 static void _print_power_level(void);
 #endif // #ifdef POWER_MONITOR
 
+#ifdef ADDONS_CONTROL
+static void _print_addons_control(void);
+#endif // #ifdef ADDONS_CONTROL
+
 static void _add_custom_char(CustomChar custom_char);
 
 // ------------------------------------------------ //
@@ -61,6 +69,10 @@ void setup_display(void)
     _add_custom_char(arrow_forward_middle_bottom);
     _add_custom_char(remote_antenna_signe_left);
     _add_custom_char(remote_antenna_signe_right);
+    _add_custom_char(light_left);
+    _add_custom_char(light_beams_right);
+    _add_custom_char(alarm_light_off);
+    _add_custom_char(alarm_light_on);
 
     lcd.home();
 
@@ -83,6 +95,10 @@ void update_display(void)
 #ifdef POWER_MONITOR
     _print_power_level();
 #endif // #ifdef POWER_MONITOR
+
+#ifdef ADDONS_CONTROL
+    _print_addons_control();
+#endif // #ifdef ADDONS_CONTROL
 
 }
 
@@ -156,6 +172,35 @@ static void _print_power_level(void)
     lcd.print(get_actual_power_level());
 }
 #endif // #ifdef POWER_MONITOR
+
+#ifdef ADDONS_CONTROL
+static void _print_addons_control(void)
+{
+    static bool blink_toggle = false;
+
+    lcd.setCursor(7, 0);
+    lcd.write(light_left.char_nr);
+
+    if(get_light_state())
+    {
+        lcd.setCursor(8, 0);
+        lcd.write(light_beams_right.char_nr);
+    }
+
+    lcd.setCursor(11, 0);
+
+    if(get_alarm_light_state() && blink_toggle)
+    {
+        lcd.write(alarm_light_on.char_nr);
+    }
+    else
+    {
+        lcd.write(alarm_light_off.char_nr);
+    }
+
+    blink_toggle = !blink_toggle;
+}
+#endif // #ifdef ADDONS_CONTROL
 
 static void _add_custom_char(CustomChar custom_char)
 {

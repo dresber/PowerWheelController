@@ -5,6 +5,10 @@
 
 #include "project_config.h"
 
+#ifdef ADDONS_CONTROL
+#include "control/addons_control.h"
+#endif // #ifdef ADDONS_CONTROL
+
 #ifdef CAR_DISPLAY
 #include "display/display.h"
 #endif // #ifdef CAR_DISPLAY
@@ -52,6 +56,10 @@
 void setup() 
 {
   pinMode(LED_BUILTIN, OUTPUT);
+
+#ifdef ADDONS_CONTROL
+  setup_addons_control();
+#endif // #ifdef ADDONS_CONTROL
 
 #ifdef COMM
   setup_comm_serial();
@@ -111,6 +119,10 @@ void loop()
 
   if (cnt_task2 >= TASK_2_PROCESS_TIME)
   {
+#ifdef ADDONS_CONTROL
+    process_addons_control();
+#endif // #ifdef ADDONS_CONTROL
+
     cnt_task2 = 0;
   }
   else

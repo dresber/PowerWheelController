@@ -7,10 +7,9 @@
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
-#define CAR_DISPLAY
-#ifdef CAR_DISPLAY
+#define ADDONS_CONTROL
 
-#endif // #ifdef CAR_DISPLAY
+#define CAR_DISPLAY
 
 #define COMM
 #ifdef COMM
