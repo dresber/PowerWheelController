@@ -34,6 +34,10 @@
 #include "sensors/distance.h"
 #endif // #ifdef DEBUG_DISTANCE
 
+#ifdef DRIVE_CONTROL
+#include "control/drive_control.h"
+#endif // #ifdef DRIVE_CONTROL
+
 //#include "motor\motor_control.h"
 
 // ------------------------------------------------ //
@@ -58,11 +62,17 @@
 // ------------------------------------------------ //
 //              function prototypes
 // ------------------------------------------------ //
+#ifdef COMM
 void serial_task(void *pvParameters);
+#endif // #ifdef COMM
+
 void process_task(void *pvParameters);
+
+#ifdef CAR_DISPLAY
 void display_task(void *pvParameters);
+#endif // #ifdef CAR_DISPLAY
 
-
+#ifdef COMM
 void serial_task(void *pvParameters)
 {
   (void) pvParameters;
@@ -73,6 +83,7 @@ void serial_task(void *pvParameters)
     vTaskDelay(10 / portTICK_PERIOD_MS);
   }
 }
+#endif // #ifdef COMM
 
 void process_task(void *pvParameters)
 {
@@ -82,8 +93,13 @@ void process_task(void *pvParameters)
 #ifdef DEBUG_MAIN
   digitalWrite(MAIN_LOOP, HIGH);
 #endif // #ifdef DEBUG_MAIN
+#ifdef SAFETY
     process_safety();
+#endif //#ifdef SAFETY
     process_addons_control();
+#ifdef DRIVE_CONTROL
+    process_drive_control();
+#endif // #ifdef DRIVE_CONTROL
 #ifdef DEBUG_MAIN
   digitalWrite(MAIN_LOOP, LOW);
 #endif // #ifdef DEBUG_MAIN
@@ -91,6 +107,7 @@ void process_task(void *pvParameters)
   }
 }
 
+#ifdef CAR_DISPLAY
 void display_task(void *pvParameters)
 {
   (void) pvParameters;
@@ -102,6 +119,7 @@ void display_task(void *pvParameters)
     vTaskDelay(500 / portTICK_PERIOD_MS);  
   }
 }
+#endif // #ifdef CAR_DISPLAY
 
 void setup() 
 {
@@ -133,10 +151,18 @@ void setup()
   setup_display();
 #endif // #ifdef CAR_DISPLAY
 
+#ifdef DRIVE_CONTROL
+  setup_drive_control();
+#endif // #ifdef DRIVE_CONTROL
+
 #ifdef OS_FREERTOS
+#ifdef COMM
   xTaskCreate(serial_task, "serial", 128, NULL, 2, NULL);
+#endif // #ifdef COMM
   xTaskCreate(process_task, "process", 256, NULL, 2, NULL);
+#ifdef CAR_DISPLAY
   xTaskCreate(display_task, "display", 256, NULL, 2, NULL);
+#endif // #ifdef CAR_DISPLAY
   vTaskStartScheduler();
 #endif // #ifdef OS_FREERTOS
 

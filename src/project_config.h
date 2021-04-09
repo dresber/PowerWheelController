@@ -35,6 +35,8 @@
 //#define DEBUG_POWER_MONITOR
 #endif // #ifdef DEBUG
 
+#define DRIVE_CONTROL
+
 #define DISTANCE_SENSOR_FRONT_1
 //#define DISTANCE_SENSOR_FRONT_2
 //#define DISTANCE_SENSOR_BACK
