@@ -1,9 +1,14 @@
 // ------------------------------------------------ //
 //                     imports
 // ------------------------------------------------ //
+
 #include <Arduino.h>
 
 #include "project_config.h"
+
+#ifdef OS_FREERTOS
+#include <Arduino_FreeRTOS.h>
+#endif // #ifdef OS_FREERTOS
 
 #ifdef ADDONS_CONTROL
 #include "control/addons_control.h"
@@ -53,6 +58,51 @@
 // ------------------------------------------------ //
 //              function prototypes
 // ------------------------------------------------ //
+void serial_task(void *pvParameters);
+void process_task(void *pvParameters);
+void display_task(void *pvParameters);
+
+
+void serial_task(void *pvParameters)
+{
+  (void) pvParameters;
+
+  for (;;)
+  {
+    process_serial_rx();
+    vTaskDelay(10 / portTICK_PERIOD_MS);
+  }
+}
+
+void process_task(void *pvParameters)
+{
+  (void) pvParameters;
+  for (;;)
+  {
+#ifdef DEBUG_MAIN
+  digitalWrite(MAIN_LOOP, HIGH);
+#endif // #ifdef DEBUG_MAIN
+    process_safety();
+    process_addons_control();
+#ifdef DEBUG_MAIN
+  digitalWrite(MAIN_LOOP, LOW);
+#endif // #ifdef DEBUG_MAIN
+    vTaskDelay(20 / portTICK_PERIOD_MS);  
+  }
+}
+
+void display_task(void *pvParameters)
+{
+  (void) pvParameters;
+  for (;;)
+  {
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+
+    update_display();
+    vTaskDelay(500 / portTICK_PERIOD_MS);  
+  }
+}
+
 void setup() 
 {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -83,92 +133,16 @@ void setup()
   setup_display();
 #endif // #ifdef CAR_DISPLAY
 
-//  setup_motor_pins();
+#ifdef OS_FREERTOS
+  xTaskCreate(serial_task, "serial", 128, NULL, 2, NULL);
+  xTaskCreate(process_task, "process", 256, NULL, 2, NULL);
+  xTaskCreate(display_task, "display", 256, NULL, 2, NULL);
+  vTaskStartScheduler();
+#endif // #ifdef OS_FREERTOS
 
 }
 
 
 void loop() 
 {
-  static int cnt_task1 = 0;
-  static int cnt_task2 = 0;
-  static int cnt_task3 = 0;
-  static int cnt_task4 = 0;
-  static int cnt_task5 = 0;
-
-#ifdef DEBUG_MAIN
-  digitalWrite(MAIN_LOOP, HIGH);
-#endif // #ifdef DEBUG_MAIN
-
-#ifdef COMM
-  process_serial_rx();
-#endif // #ifdef COMM
-
-  if (cnt_task1 >= TASK_1_PROCESS_TIME)
-  {
-#ifdef SAFETY
-    process_safety();
-#endif // #ifdef SAFETY
-    cnt_task1 = 0;
-  }
-  else
-  {
-    cnt_task1++;
-  }
-
-
-  if (cnt_task2 >= TASK_2_PROCESS_TIME)
-  {
-#ifdef ADDONS_CONTROL
-    process_addons_control();
-#endif // #ifdef ADDONS_CONTROL
-
-    cnt_task2 = 0;
-  }
-  else
-  {
-    cnt_task2++;
-  }
-
-  if (cnt_task3 >= TASK_3_PROCESS_TIME)
-  {
-    cnt_task3 = 0;
-    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-  }
-  else
-  {
-    cnt_task3++;
-  }
-
-  if (cnt_task4 >= TASK_4_PROCESS_TIME)
-  {
-    cnt_task4 = 0;
-#ifdef CAR_DISPLAY
-    update_display();
-#endif // #ifdef CAR_DISPLAY
-  }
-  else
-  {
-    cnt_task4++;
-  }
-
-  if (cnt_task5 >= TASK_5_PROCESS_TIME)
-  {
-#ifdef DEBUG_DISTANCE
-    DEBUG_OUTPUT.print("front_1: ");
-    DEBUG_OUTPUT.print(front_sensor_1.read());
-    DEBUG_OUTPUT.println(" cm");
-#endif // #ifdef DEBUG_DISTANCE
-    cnt_task5 = 0;
-  }
-  else
-  {
-    cnt_task5++;
-  }
-
-#ifdef DEBUG_MAIN
-  digitalWrite(MAIN_LOOP, LOW);
-#endif // #ifdef DEBUG_MAIN
-
-  delay(1);
 }
