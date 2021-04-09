@@ -123,22 +123,22 @@ static void print_safety_state(void)
     {
         prev_state = act_state;
 
-        lcd.setCursor(10, 3);
+        lcd.setCursor(8, 0);
         lcd.print("    ");
 
         if (act_state == OK)
         {
-            lcd.setCursor(11, 3);
+            lcd.setCursor(9, 0);
             lcd.print("OK");
         }
         else if (act_state == HALT)
         {
-            lcd.setCursor(10, 3);
+            lcd.setCursor(8, 0);
             lcd.print("HALT");
         }
         else
         {
-            lcd.setCursor(10, 3);
+            lcd.setCursor(8, 0);
             lcd.print("STOP");
         }
     }
@@ -152,10 +152,10 @@ static void print_remote_state(void)
 
     if (prev_state != act_state)
     {
-        lcd.setCursor(15, 3);
+        lcd.setCursor(13, 2);
         lcd.write(remote_antenna_signe_left.char_nr);
         lcd.write(remote_antenna_signe_right.char_nr);
-        lcd.setCursor(17, 3);
+        lcd.setCursor(15, 2);
 
         if(act_state == MONITOR)
         {
@@ -185,7 +185,7 @@ static void _print_power_level(void)
 
         lcd.setCursor(19, 0);
         lcd.print("%");
-        lcd.setCursor(15, 0);
+        lcd.setCursor(16, 0);
         lcd.print(get_actual_power_level());
     }
 }
@@ -203,19 +203,19 @@ static void _print_addons_control(void)
     {
         prev_light_state = act_light_state;
 
-        lcd.setCursor(7, 0);
+        lcd.setCursor(12, 3);
         lcd.print("  ");
-        lcd.setCursor(7, 0);
+        lcd.setCursor(12, 3);
         lcd.write(light_left.char_nr);
 
         if(act_light_state)
         {
-            lcd.setCursor(8, 0);
+            lcd.setCursor(13, 3);
             lcd.write(light_beams_right.char_nr);
         }
     }
 
-    lcd.setCursor(11, 0);
+    lcd.setCursor(19, 3);
 
     if(get_alarm_light_state() && blink_toggle)
     {
