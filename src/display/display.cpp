@@ -18,6 +18,10 @@
 #include "sensors/voltage_monitor.h"
 #endif // #ifdef POWER_MONITOR
 
+#ifdef DRIVE_CONTROL
+#include "control/drive_control.h"
+#endif // #ifdef DRIVE_CONTROL
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -30,13 +34,11 @@
 // ------------------------------------------------ //
 //                  global vars
 // ------------------------------------------------ //
-LiquidCrystal_I2C lcd(0x27,20,4);
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 // ------------------------------------------------ //
 //              function prototypes
 // ------------------------------------------------ //
-static void print_arrow_forward(void);
-
 #ifdef SAFETY
 static void print_safety_state(void);
 static void print_remote_state(void);
@@ -49,6 +51,10 @@ static void _print_power_level(void);
 #ifdef ADDONS_CONTROL
 static void _print_addons_control(void);
 #endif // #ifdef ADDONS_CONTROL
+
+#ifdef DRIVE_CONTROL
+static void _print_speed_control(void);
+#endif // #ifdef DRIVE_CONTROL
 
 static void _add_custom_char(CustomChar custom_char);
 
@@ -63,10 +69,8 @@ void setup_display(void)
     lcd.init();
     lcd.backlight();
 
-    _add_custom_char(arrow_forward_left_edge);
-    _add_custom_char(arrow_forward_middle_top);
-    _add_custom_char(arrow_forward_right_edge);
-    _add_custom_char(arrow_forward_middle_bottom);
+    _add_custom_char(arrow_forward);
+    _add_custom_char(arrow_back);
     _add_custom_char(remote_antenna_signe_left);
     _add_custom_char(remote_antenna_signe_right);
     _add_custom_char(light_left);
@@ -98,19 +102,10 @@ void update_display(void)
     _print_addons_control();
 #endif // #ifdef ADDONS_CONTROL
 
-}
+#ifdef DRIVE_CONTROL
+    _print_speed_control();
+#endif // #ifdef DRIVE_CONTROL
 
-
-static void print_arrow_forward(void)
-{
-    lcd.setCursor(0, 0);
-    lcd.write(arrow_forward_left_edge.char_nr);
-    lcd.setCursor(1, 0);
-    lcd.write(arrow_forward_middle_top.char_nr);
-    lcd.setCursor(2, 0);
-    lcd.write(arrow_forward_right_edge.char_nr);
-    lcd.setCursor(1, 1);
-    lcd.write(arrow_forward_middle_bottom.char_nr);
 }
 
 #ifdef SAFETY
@@ -229,6 +224,25 @@ static void _print_addons_control(void)
     blink_toggle = !blink_toggle;
 }
 #endif // #ifdef ADDONS_CONTROL
+
+
+#ifdef DRIVE_CONTROL
+static void _print_speed_control(void)
+{
+    static int16_t prev_speed_level = -1;
+    int16_t speed_level = get_actual_speed_level();
+
+    if (prev_speed_level != speed_level)
+    {
+        prev_speed_level = speed_level;
+
+        lcd.setCursor(0, 3);
+        lcd.print("+  ");
+        lcd.print(speed_level);
+        lcd.print("  -");
+    }
+}
+#endif // #ifdef DRIVE_CONTROL
 
 static void _add_custom_char(CustomChar custom_char)
 {

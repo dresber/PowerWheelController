@@ -149,6 +149,14 @@ int16_t get_actual_speed_pwm_value(void)
 /**
  * 
  */
+void set_remote_control_enabled(bool enabled)
+{
+    _remote_controlled = enabled;
+}
+
+/**
+ * 
+ */
 void set_moving_direction(DriveDirection direction)
 {
     if((_actual_direction != direction) && (_actual_direction != DIR_OFF))

@@ -7,6 +7,14 @@
 #include "safety/safety.h"
 #endif // #ifdef SAFETY
 
+#ifdef ADDONS_CONTROL
+#include "control/addons_control.h"
+#endif // #ifdef ADDONS_CONTROL
+
+#ifdef DRIVE_CONTROL
+#include "control/drive_control.h"
+#endif // #ifdef DRIVE_CONTROL
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -137,6 +145,9 @@ void process_command(char cmd_buffer[])
         else if(cmd_string == "rem_con")
         {
             set_remote_state(CONTROL);
+#ifdef DRIVE_CONTROL
+            set_remote_control_enabled(true);
+#endif // #ifdef DRIVE_CONTROL
         }
         else if (cmd_string == "rem_mon")
         {
@@ -145,8 +156,44 @@ void process_command(char cmd_buffer[])
         else if (cmd_string == "rem_off")
         {
             set_remote_state(OFF);
+#ifdef DRIVE_CONTROL
+            set_remote_control_enabled(false);
+#endif // #ifdef DRIVE_CONTROL
 #endif // #ifdef SAFETY
         }
+#ifdef ADDONS_CONTROL
+        else if (cmd_string == "light_tog")
+        {
+            set_light_state(!get_light_state());
+        }
+        else if (cmd_string == "alarm_tog")
+        {
+            set_alarm_light_state(!get_alarm_light_state());
+        }
+#endif // #ifdef ADDONS_CONTROL
+#ifdef DRIVE_CONTROL
+        else if (cmd_string == "spd_plus")
+        {
+            increase_speed_level();
+        }
+        else if (cmd_string == "spd_minus")
+        {
+            reduce_speed_level();
+        }
+        else if (cmd_string == "mov_for")
+        {
+            set_moving_direction(DIR_FORWARD);
+        }
+        else if (cmd_string == "mov_off")
+        {
+            set_moving_direction(DIR_OFF);
+        }
+        else if (cmd_string == "mov_back")
+        {
+            set_moving_direction(DIR_BACKWARD);
+        }
+
+#endif // #ifdef DRIVE_CONTROL
     }
     else
     {
