@@ -30,24 +30,14 @@
 #include "safety/safety.h"
 #endif // #ifdef SAFETY
 
-#ifdef DEBUG_DISTANCE
-#include "sensors/distance.h"
-#endif // #ifdef DEBUG_DISTANCE
-
 #ifdef DRIVE_CONTROL
 #include "control/drive_control.h"
 #endif // #ifdef DRIVE_CONTROL
 
-//#include "motor\motor_control.h"
-
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
-#define TASK_1_PROCESS_TIME 10
-#define TASK_2_PROCESS_TIME 50
-#define TASK_3_PROCESS_TIME 100
-#define TASK_4_PROCESS_TIME 500
-#define TASK_5_PROCESS_TIME 500
+
 
 // ------------------------------------------------ //
 //                  type definitions
@@ -91,7 +81,7 @@ void process_task(void *pvParameters)
   for (;;)
   {
 #ifdef DEBUG_MAIN
-  digitalWrite(MAIN_LOOP, HIGH);
+    digitalWrite(MAIN_LOOP, HIGH);
 #endif // #ifdef DEBUG_MAIN
 #ifdef SAFETY
     process_safety();
@@ -101,7 +91,7 @@ void process_task(void *pvParameters)
     process_drive_control();
 #endif // #ifdef DRIVE_CONTROL
 #ifdef DEBUG_MAIN
-  digitalWrite(MAIN_LOOP, LOW);
+    digitalWrite(MAIN_LOOP, LOW);
 #endif // #ifdef DEBUG_MAIN
     vTaskDelay(20 / portTICK_PERIOD_MS);  
   }
