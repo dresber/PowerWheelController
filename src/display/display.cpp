@@ -121,15 +121,10 @@ static void print_safety_state(void)
         lcd.setCursor(8, 0);
         lcd.print("    ");
 
-        if (act_state == OK)
+        if (act_state == SAFETY_OK)
         {
             lcd.setCursor(9, 0);
             lcd.print("OK");
-        }
-        else if (act_state == HALT)
-        {
-            lcd.setCursor(8, 0);
-            lcd.print("HALT");
         }
         else
         {

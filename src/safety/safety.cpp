@@ -17,7 +17,7 @@
 //                  global vars
 // ------------------------------------------------ //
 static RemoteState remote_state = OFF;
-static SafetyState safety_state = OK;
+static SafetyState safety_state = SAFETY_OK;
 static int64_t last_wdg_trig_millis = 0;
 
 
@@ -55,7 +55,7 @@ void process_safety(void)
 
     case MONITOR:
     case CONTROL:
-        if (safety_state != EMERGENCY_STOP)
+        if (safety_state != SAFETY_EMERGENCY_STOP)
         {
             if (_check_wdg_trig_received_in_time())
             {
@@ -63,7 +63,7 @@ void process_safety(void)
             }
             else
             {
-                safety_state = EMERGENCY_STOP;
+                safety_state = SAFETY_EMERGENCY_STOP;
             }
         }
         break;    
@@ -74,12 +74,11 @@ void process_safety(void)
 
     switch (safety_state)
     {
-    case OK:
+    case SAFETY_OK:
         _enable_safety_pins();
         break;
     
-    case HALT:
-    case EMERGENCY_STOP:
+    case SAFETY_EMERGENCY_STOP:
         _disable_safety_pins();
         break;
 
@@ -122,7 +121,7 @@ void trigger_remote_wdg(void)
  */
 void set_emergency_stop(void)
 {
-    safety_state = EMERGENCY_STOP;
+    safety_state = SAFETY_EMERGENCY_STOP;
     _disable_safety_pins();
 }
 
@@ -132,7 +131,7 @@ void set_emergency_stop(void)
  */
 void reset_emergency_stop(void)
 {
-    safety_state = OK;
+    safety_state = SAFETY_OK;
 }
 
 /**

@@ -11,9 +11,8 @@
 // ------------------------------------------------ //
 typedef enum
 {
-    OK = 1,
-    HALT = 2,
-    EMERGENCY_STOP =3,
+    SAFETY_OK = 1,
+    SAFETY_EMERGENCY_STOP = 2,
 }SafetyState;
 
 
