@@ -183,14 +183,17 @@ void process_command(char cmd_buffer[])
         else if (cmd_string == "mov_for")
         {
             set_moving_direction(DIR_FORWARD);
+            set_throttle(true);
         }
         else if (cmd_string == "mov_off")
         {
             set_moving_direction(DIR_OFF);
+            set_throttle(false);
         }
         else if (cmd_string == "mov_back")
         {
             set_moving_direction(DIR_BACKWARD);
+            set_throttle(true);
         }
 
 #endif // #ifdef DRIVE_CONTROL
