@@ -22,6 +22,10 @@
 #include "control/drive_control.h"
 #endif // #ifdef DRIVE_CONTROL
 
+#ifdef STEERING_CONTROL
+#include "control/steering_control.h"
+#endif // #ifdef STEERING_CONTROL
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -54,7 +58,12 @@ static void _print_addons_control(void);
 
 #ifdef DRIVE_CONTROL
 static void _print_speed_control(void);
+static void _print_driving_direction(void);
 #endif // #ifdef DRIVE_CONTROL
+
+#ifdef STEERING_CONTROL
+static void _print_steering_direction(void);
+#endif // #ifdef STEERING_CONTROL
 
 static void _add_custom_char(CustomChar custom_char);
 
@@ -103,7 +112,12 @@ void update_display(void)
 
 #ifdef DRIVE_CONTROL
     _print_speed_control();
+    _print_driving_direction();
 #endif // #ifdef DRIVE_CONTROL
+
+#ifdef STEERING_CONTROL
+    _print_steering_direction();
+#endif // #ifdef STEERING_CONTROL
 
 }
 
@@ -248,7 +262,72 @@ static void _print_speed_control(void)
         lcd.print("  -");
     }
 }
+
+static void _print_driving_direction(void)
+{
+    static DriveDirection prev_direction;
+    DriveDirection act_direction = get_moving_direction();
+
+    if (prev_direction != act_direction)
+    {
+        prev_direction = act_direction;
+
+        lcd.setCursor(3, 0);
+        lcd.print(" ");
+        lcd.setCursor(3, 1);
+        lcd.print(" ");
+        lcd.setCursor(3, 2);
+        lcd.print(" ");
+
+        switch (act_direction)
+        {
+            case DIR_OFF:
+                lcd.setCursor(3, 1);
+                lcd.print("-");
+                break;
+            case DIR_FORWARD:
+                lcd.setCursor(3, 0);
+                lcd.write(arrow_forward.char_nr);
+                break;
+            case DIR_BACKWARD:
+                lcd.setCursor(3, 2);
+                lcd.write(arrow_back.char_nr);
+                break;
+        }
+    }
+}
 #endif // #ifdef DRIVE_CONTROL
+
+#ifdef STEERING_CONTROL
+static void _print_steering_direction(void)
+{
+    static SteeringDirection prev_direction;
+    SteeringDirection act_direction = get_steering_direction();
+
+    if (prev_direction != act_direction)
+    {
+        lcd.setCursor(1, 1);
+        lcd.print(" ");
+        lcd.setCursor(5, 1);
+        lcd.print(" ");
+
+        switch (act_direction)
+        {
+            case DIR_LEFT:
+                lcd.setCursor(1, 1);
+                lcd.print("<");
+                break;
+            case DIR_RIGHT:
+                lcd.setCursor(5, 1);
+                lcd.print(">");
+                break;
+            case DIR_OFF:
+                break;
+        }
+    }
+}
+#endif // #ifdef STEERING_CONTROL
+
 
 static void _add_custom_char(CustomChar custom_char)
 {
