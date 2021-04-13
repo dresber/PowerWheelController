@@ -44,8 +44,8 @@ LiquidCrystal_I2C lcd(0x27, 20, 4);
 //              function prototypes
 // ------------------------------------------------ //
 #ifdef SAFETY
-static void print_safety_state(void);
-static void print_remote_state(void);
+static void _print_safety_state(void);
+static void _print_remote_state(void);
 #endif // #ifdef SAFETY
 
 #ifdef POWER_MONITOR
@@ -98,8 +98,8 @@ void setup_display(void)
 void update_display(void)
 {
 #ifdef SAFETY
-    print_safety_state();
-    print_remote_state();
+    _print_safety_state();
+    _print_remote_state();
 #endif // #ifdef SAFETY
 
 #ifdef POWER_MONITOR
@@ -118,11 +118,10 @@ void update_display(void)
 #ifdef STEERING_CONTROL
     _print_steering_direction();
 #endif // #ifdef STEERING_CONTROL
-
 }
 
 #ifdef SAFETY
-static void print_safety_state(void)
+static void _print_safety_state(void)
 {
     static SafetyState prev_state;
     SafetyState act_state = get_safety_state();
@@ -148,7 +147,7 @@ static void print_safety_state(void)
 }
 
 
-static void print_remote_state(void)
+static void _print_remote_state(void)
 {
     static RemoteState prev_state;
     RemoteState act_state = get_remote_state();
@@ -309,7 +308,7 @@ static void _print_steering_direction(void)
     if (prev_direction != act_direction)
     {
         prev_direction = act_direction;
-        
+
         lcd.setCursor(1, 1);
         lcd.print(" ");
         lcd.setCursor(5, 1);

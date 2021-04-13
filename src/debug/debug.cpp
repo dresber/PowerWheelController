@@ -33,4 +33,7 @@ void setup_debug_pins(void)
     
     pinMode(DEBUG_PIN_1, OUTPUT);
     pinMode(DEBUG_PIN_2, OUTPUT);
+    pinMode(DEBUG_PIN_3, OUTPUT);
+    pinMode(DEBUG_PIN_4, OUTPUT);
+    pinMode(DEBUG_PIN_5, OUTPUT);
 }

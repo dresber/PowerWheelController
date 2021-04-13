@@ -74,7 +74,7 @@ void serial_task(void *pvParameters)
   for (;;)
   {
     process_serial_rx();
-    vTaskDelay(10 / portTICK_PERIOD_MS);
+    vTaskDelay(20 / portTICK_PERIOD_MS);
   }
 }
 #endif // #ifdef COMM
@@ -110,9 +110,15 @@ void display_task(void *pvParameters)
   (void) pvParameters;
   for (;;)
   {
+#ifdef DEBUG_DISPLAY
+    digitalWrite(DISPLAY_PROCESS_PIN, HIGH);
+#endif // #ifdef DEBUG_DISPLAY
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 
     update_display();
+#ifdef DEBUG_DISPLAY
+    digitalWrite(DISPLAY_PROCESS_PIN, LOW);
+#endif // #ifdef DEBUG_DISPLAY
     vTaskDelay(500 / portTICK_PERIOD_MS);  
   }
 }
@@ -158,11 +164,11 @@ void setup()
 
 #ifdef OS_FREERTOS
 #ifdef COMM
-  xTaskCreate(serial_task, "serial", 128, NULL, 2, NULL);
+  xTaskCreate(serial_task, "serial", 128, NULL, 3, NULL);
 #endif // #ifdef COMM
   xTaskCreate(process_task, "process", 256, NULL, 2, NULL);
 #ifdef CAR_DISPLAY
-  xTaskCreate(display_task, "display", 256, NULL, 2, NULL);
+  xTaskCreate(display_task, "display", 256, NULL, 1, NULL);
 #endif // #ifdef CAR_DISPLAY
   vTaskStartScheduler();
 #endif // #ifdef OS_FREERTOS
