@@ -150,13 +150,16 @@ void set_remote_control_enabled(bool enabled)
  */
 void set_moving_direction(DriveDirection direction)
 {
-    if((_actual_direction != direction) && (_actual_direction != DIR_OFF))
+    if (_remote_controlled == true)
     {
-        _actual_direction = DIR_OFF;
-    }
-    else
-    {
-        _actual_direction = direction;
+        if((_actual_direction != direction) && (_actual_direction != DIR_OFF))
+        {
+            _actual_direction = DIR_OFF;
+        }
+        else
+        {
+            _actual_direction = direction;
+        }
     }
 }
 
@@ -183,13 +186,16 @@ void reduce_speed_level(void)
  */
 void set_throttle(bool throttle_state)
 {
-    if (throttle_state)
+    if (_remote_controlled == true)
     {
-        _actual_movement = MOV_ACTIVE;
-    }
-    else
-    {
-        _actual_movement = MOV_STOPPED;
+        if (throttle_state)
+        {
+            _actual_movement = MOV_ACTIVE;
+        }
+        else
+        {
+            _actual_movement = MOV_STOPPED;
+        }
     }
 }
 
