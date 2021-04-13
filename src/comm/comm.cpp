@@ -15,6 +15,10 @@
 #include "control/drive_control.h"
 #endif // #ifdef DRIVE_CONTROL
 
+#ifdef STEERING_CONTROL
+#include "control/steering_control.h"
+#endif // #ifdef STEERING_CONTROL
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -148,6 +152,9 @@ void process_command(char cmd_buffer[])
 #ifdef DRIVE_CONTROL
             set_remote_control_enabled(true);
 #endif // #ifdef DRIVE_CONTROL
+#ifdef STEERING_CONTROL
+            set_remote_state(true);
+#endif // #ifdef STEERING_CONTROL
         }
         else if (cmd_string == "rem_mon")
         {
@@ -159,6 +166,9 @@ void process_command(char cmd_buffer[])
 #ifdef DRIVE_CONTROL
             set_remote_control_enabled(false);
 #endif // #ifdef DRIVE_CONTROL
+#ifdef STEERING_CONTROL
+            set_remote_state(false);
+#endif // #ifdef STEERING_CONTROL
 #endif // #ifdef SAFETY
         }
 #ifdef ADDONS_CONTROL
@@ -195,8 +205,21 @@ void process_command(char cmd_buffer[])
             set_moving_direction(DIR_BACKWARD);
             set_throttle(true);
         }
-
 #endif // #ifdef DRIVE_CONTROL
+#ifdef STEERING_CONTROL
+        else if (cmd_string == "steer_right")
+        {
+            set_steering_direction(STEER_RIGHT);
+        }
+        else if (cmd_string == "steer_left")
+        {
+            set_steering_direction(STEER_LEFT);
+        }
+        else if (cmd_string == "steer_off")
+        {
+            set_steering_direction(STEER_STRAIGHT);
+        }
+#endif // #ifdef STEERING_CONTROL
     }
     else
     {
