@@ -22,7 +22,7 @@
 // ------------------------------------------------ //
 static bool _remote_enabled = false;
 
-static SteeringDirection _act_steering = DIR_STRAIGHT;
+static SteeringDirection _act_steering = STEER_STRAIGHT;
 
 // ------------------------------------------------ //
 //              function prototypes
@@ -51,26 +51,26 @@ void process_steering_control(void)
 #ifdef SAFETY
         if (get_safety_state() != SAFETY_OK)
         {
-            _act_steering = DIR_STRAIGHT;
+            _act_steering = STEER_STRAIGHT;
         }
 #endif // #ifdef SAFETY
     }
     else
     {
-        _act_steering = DIR_STRAIGHT;
+        _act_steering = STEER_STRAIGHT;
     }
 
     switch (_act_steering)
     {
-        case DIR_STRAIGHT:
+        case STEER_STRAIGHT:
             digitalWrite(STEERING_LEFT_OUTPUT, LOW);
             digitalWrite(STEERING_RIGHT_OUTPUT, LOW);
             break;
-        case DIR_LEFT:
+        case STEER_LEFT:
             digitalWrite(STEERING_RIGHT_OUTPUT, LOW);
             digitalWrite(STEERING_LEFT_OUTPUT, HIGH);
             break;
-        case DIR_RIGHT:
+        case STEER_RIGHT:
             digitalWrite(STEERING_LEFT_OUTPUT, LOW);
             digitalWrite(STEERING_RIGHT_OUTPUT, HIGH);
             break;

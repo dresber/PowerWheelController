@@ -17,9 +17,9 @@
 // ------------------------------------------------ //
 typedef enum
 {
-    DIR_LEFT = 0,
-    DIR_STRAIGHT = 1,
-    DIR_RIGHT =2,
+    STEER_LEFT = 0,
+    STEER_STRAIGHT = 1,
+    STEER_RIGHT = 2,
 
 }SteeringDirection;
 

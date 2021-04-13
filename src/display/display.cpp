@@ -287,11 +287,13 @@ static void _print_driving_direction(void)
                 break;
             case DIR_FORWARD:
                 lcd.setCursor(3, 0);
-                lcd.write(arrow_forward.char_nr);
+                lcd.print("F");
+//                lcd.write(arrow_forward.char_nr);
                 break;
             case DIR_BACKWARD:
                 lcd.setCursor(3, 2);
-                lcd.write(arrow_back.char_nr);
+                lcd.print("B");
+//                lcd.write(arrow_back.char_nr);
                 break;
         }
     }
@@ -306,6 +308,8 @@ static void _print_steering_direction(void)
 
     if (prev_direction != act_direction)
     {
+        prev_direction = act_direction;
+        
         lcd.setCursor(1, 1);
         lcd.print(" ");
         lcd.setCursor(5, 1);
@@ -313,15 +317,15 @@ static void _print_steering_direction(void)
 
         switch (act_direction)
         {
-            case DIR_LEFT:
+            case STEER_LEFT:
                 lcd.setCursor(1, 1);
-                lcd.print("<");
+                lcd.print("L");
                 break;
-            case DIR_RIGHT:
+            case STEER_RIGHT:
                 lcd.setCursor(5, 1);
-                lcd.print(">");
+                lcd.print("R");
                 break;
-            case DIR_OFF:
+            case STEER_STRAIGHT:
                 break;
         }
     }
