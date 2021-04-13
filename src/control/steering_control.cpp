@@ -93,3 +93,12 @@ void set_steering_direction(SteeringDirection direction)
 {
     _act_steering = direction;
 }
+
+
+/**
+ * 
+ */
+void set_remote_state(bool state)
+{
+    _remote_enabled = state;
+}

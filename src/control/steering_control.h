@@ -38,5 +38,6 @@ void process_steering_control(void);
 SteeringDirection get_steering_direction(void);
 
 void set_steering_direction(SteeringDirection direction);
+void set_remote_state(bool state);
 
 #endif // #ifndef steering_control_H
