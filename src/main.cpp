@@ -34,6 +34,10 @@
 #include "control/drive_control.h"
 #endif // #ifdef DRIVE_CONTROL
 
+#ifdef STEERING_CONTROL
+#include "control/steering_control.h"
+#endif // #ifdef STEERING_CONTROL
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -90,6 +94,9 @@ void process_task(void *pvParameters)
 #ifdef DRIVE_CONTROL
     process_drive_control();
 #endif // #ifdef DRIVE_CONTROL
+#ifdef STEERING_CONTROL
+    process_steering_control();
+#endif // #ifdef STEERING_CONTROL
 #ifdef DEBUG_MAIN
     digitalWrite(MAIN_LOOP, LOW);
 #endif // #ifdef DEBUG_MAIN
@@ -144,6 +151,10 @@ void setup()
 #ifdef DRIVE_CONTROL
   setup_drive_control();
 #endif // #ifdef DRIVE_CONTROL
+
+#ifdef STEERING_CONTROL
+  setup_steering_control();
+#endif // #ifdef STEERING_CONTROL
 
 #ifdef OS_FREERTOS
 #ifdef COMM

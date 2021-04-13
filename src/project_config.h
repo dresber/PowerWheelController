@@ -48,6 +48,8 @@
 #define WDG_TRIG_TIMEOUT_MILLIS_MAX 210
 #endif // #ifdef SAFETY
 
+#define STEERING_CONTROL
+
 #define POWER_MONITOR
 
 
