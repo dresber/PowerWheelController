@@ -21,8 +21,7 @@ typedef struct
 CustomChar arrow_forward = {{B00100, B00100, B01110, B01110, B11111, B11111, B00000, B00000}, 0};
 CustomChar arrow_back = {{B00000, B00000, B11111, B11111, B01110, B01110, B00100, B00100}, 1};
 
-CustomChar remote_antenna_signe_left = {{B00000, B00000, B00000, B00000, B00001, B00011, B00011, B00011}, 4};
-CustomChar remote_antenna_signe_right = {{B00011, B01111, B11100, B10011, B01111, B01100, B11011, B11011}, 5};
+CustomChar remote_antenna_signe = {{B00000, B01110, B01110, B01110, B00100, B00100, B00100, B00100}, 5};
 
 CustomChar light_left =  {{B00011, B01111, B11111, B11111, B11111, B11111, B01111, B00111}, 6};
 CustomChar light_beams_right =  {{B00100, B01000, B10000, B11110, B11110, B10000, B01000, B00100}, 7};

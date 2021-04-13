@@ -484,5 +484,4 @@ static void _ramp_motor_pwm(void)
     _last_throttle_speed_set = _act_speed;
 
     analogWrite(pwm_pin, _act_speed);
-
 }

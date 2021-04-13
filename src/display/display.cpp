@@ -71,8 +71,7 @@ void setup_display(void)
 
     _add_custom_char(arrow_forward);
     _add_custom_char(arrow_back);
-    _add_custom_char(remote_antenna_signe_left);
-    _add_custom_char(remote_antenna_signe_right);
+    _add_custom_char(remote_antenna_signe);
     _add_custom_char(light_left);
     _add_custom_char(light_beams_right);
     _add_custom_char(alarm_light_off);
@@ -142,10 +141,9 @@ static void print_remote_state(void)
 
     if (prev_state != act_state)
     {
-        lcd.setCursor(13, 2);
-        lcd.write(remote_antenna_signe_left.char_nr);
-        lcd.write(remote_antenna_signe_right.char_nr);
-        lcd.setCursor(15, 2);
+        lcd.setCursor(14, 2);
+        lcd.write(remote_antenna_signe.char_nr);
+        lcd.setCursor(16, 2);
 
         if(act_state == MONITOR)
         {
@@ -167,7 +165,9 @@ static void print_remote_state(void)
 static void _print_power_level(void)
 {
     static int16_t prev_power_level;
+    static int16_t prev_voltage_mv;
     int16_t act_power_level = get_actual_power_level();
+    int16_t act_voltage_mv = get_actual_battery_voltage();
 
     if (prev_power_level != act_power_level)
     {
@@ -176,8 +176,19 @@ static void _print_power_level(void)
         lcd.setCursor(19, 0);
         lcd.print("%");
         lcd.setCursor(16, 0);
-        lcd.print(get_actual_power_level());
+        lcd.print(act_power_level);
     }
+
+    if (prev_voltage_mv != act_voltage_mv)
+    {
+        prev_voltage_mv = act_voltage_mv;
+
+        lcd.setCursor(19, 1);
+        lcd.print("V");
+        lcd.setCursor(16, 1);
+        lcd.print(act_voltage_mv/1000);
+    }
+
 }
 #endif // #ifdef POWER_MONITOR
 
