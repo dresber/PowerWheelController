@@ -51,6 +51,8 @@
 
 #define OS_FREERTOS
 
+#define REMOTE_PROCESS
+
 #define SAFETY
 #ifdef SAFETY
 #define WDG_TRIG_TIMEOUT_MILLIS_MAX 210

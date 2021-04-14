@@ -19,6 +19,12 @@
 #include "control/steering_control.h"
 #endif // #ifdef STEERING_CONTROL
 
+#ifdef REMOTE_PROCESS
+#ifdef POWER_MONITOR
+#include "sensors/voltage_monitor.h"
+#endif // #ifdef POWER_MONITOR
+#endif // #ifdef REMOTE_PROCESS
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -40,6 +46,9 @@
 //              function prototypes
 // ------------------------------------------------ //
 void process_command(char cmd_buffer[]);
+#ifdef REMOTE_PROCESS
+void _send_data_to_remote(void);
+#endif // #ifdef REMOTE_PROCESS
 
 
 // ------------------------------------------------ //
@@ -220,6 +229,12 @@ void process_command(char cmd_buffer[])
             set_steering_direction(STEER_STRAIGHT);
         }
 #endif // #ifdef STEERING_CONTROL
+#ifdef REMOTE_PROCESS
+        else if (cmd_string == "get_dat")
+        {
+            _send_data_to_remote();
+        }
+#endif // #ifdef REMOTE_PROCESS
     }
     else
     {
@@ -271,3 +286,32 @@ void process_serial_rx(void)
 #endif // #ifdef DEBUG_COMM
 
 }
+
+
+#ifdef REMOTE_PROCESS
+String _convert_bool_to_string(bool state)
+{
+    if (state == true)
+    {
+        return ("1");
+    }
+    else
+    {
+        return ("0");
+    }
+}
+
+
+void _send_data_to_remote(void)
+{
+
+#ifdef POWER_MONITOR
+    send_tx_msg_with_data("act_pwr", String(get_actual_power_level()));
+    send_tx_msg_with_data("act_bat", String(get_actual_battery_voltage()/1000));
+#endif // #ifdef POWER_MONITOR
+
+    send_tx_msg_with_data("act_spd", String(get_actual_speed_level()));
+    send_tx_msg_with_data("al_light_state", _convert_bool_to_string(get_alarm_light_state()));
+    send_tx_msg_with_data("light_state", _convert_bool_to_string(get_light_state()));
+}
+#endif // #ifdef REMOTE_PROCESS
