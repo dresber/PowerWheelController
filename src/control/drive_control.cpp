@@ -200,6 +200,15 @@ void set_throttle(bool throttle_state)
 }
 
 
+/**
+ * 
+ */
+bool get_active_collision_warning(void)
+{
+    return(_collision_warning_active);
+}
+
+
 static void _increase_speed_level(void)
 {
     if(_actual_direction == DIR_FORWARD)
@@ -310,6 +319,8 @@ static void _process_motor(void)
 #endif // #ifdef SAFETY
             if (_check_if_way_not_blocked())
             {
+                _collision_warning_active = false;
+
                 _last_throttle_speed_set = millis();
 
                 digitalWrite(MOTOR_BREAK_OUTPUT, LOW);
