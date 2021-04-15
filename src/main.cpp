@@ -66,6 +66,10 @@ void process_task(void *pvParameters);
 void display_task(void *pvParameters);
 #endif // #ifdef CAR_DISPLAY
 
+#ifdef BUZZER_AVAILABLE
+void buzzer_task(void *pvParameters);
+#endif // #ifdef BUZZER_AVAILABLE
+
 #ifdef COMM
 void serial_task(void *pvParameters)
 {
@@ -124,6 +128,24 @@ void display_task(void *pvParameters)
 }
 #endif // #ifdef CAR_DISPLAY
 
+#ifdef BUZZER_AVAILABLE
+void buzzer_task(void *pvParameters)
+{
+  (void) pvParameters;
+  for (;;)
+  {
+#ifdef DEBUG_BUZZER
+    digitalWrite(BUZZER_PROCESS_DEBUG_PIN, HIGH);
+#endif
+    process_buzzer();
+#ifdef DEBUG_BUZZER
+    digitalWrite(BUZZER_PROCESS_DEBUG_PIN, LOW);
+#endif
+    vTaskDelay(1000 / portTICK_PERIOD_MS); 
+  }  
+}
+#endif // #ifdef BUZZER_AVAILABLE
+
 void setup() 
 {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -170,6 +192,9 @@ void setup()
 #ifdef CAR_DISPLAY
   xTaskCreate(display_task, "display", 256, NULL, 1, NULL);
 #endif // #ifdef CAR_DISPLAY
+#ifdef BUZZER_AVAILABLE
+  xTaskCreate(buzzer_task, "buzzer", 128, NULL, 1, NULL);
+#endif // #ifdef BUZZER_AVAILABLE
   vTaskStartScheduler();
 #endif // #ifdef OS_FREERTOS
 

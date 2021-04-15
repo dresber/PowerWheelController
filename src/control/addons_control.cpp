@@ -3,10 +3,18 @@
 // ------------------------------------------------ //
 #include "addons_control.h"
 
+#ifdef OS_FREERTOS
+#include <Arduino_FreeRTOS.h>
+#endif // #ifdef OS_FREERTOS
+
+#ifdef BUZZER_AVAILABLE
+#include "control/tone_notes.h"
+#endif // #ifdef BUZZER_AVAILABLE
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
-
+#define MAX_BUZZER_QUEUE 5
 
 // ------------------------------------------------ //
 //                  type definitions
@@ -18,6 +26,11 @@
 // ------------------------------------------------ //
 static bool _light_state = false;
 static bool _alarm_light_state = false;
+
+#ifdef BUZZER_AVAILABLE
+static volatile uint8_t _conn_buzzer_cnt = 0;
+static volatile uint8_t _disconn_buzzer_cnt = 0;
+#endif // #ifdef BUZZER_AVAILABLE
 
 // ------------------------------------------------ //
 //              function prototypes
@@ -34,6 +47,7 @@ void setup_addons_control(void)
 {
     pinMode(LIGHT_OUTPUT, OUTPUT);
     pinMode(ALARM_LIGHT_OUTPUT, OUTPUT);
+    pinMode(BUZZER_PWM_OUTPUT, OUTPUT);
 
     pinMode(LIGHT_SWITCH_INPUT, INPUT_PULLUP);
     pinMode(ALARM_LIGHT_SWITCH_INPUT, INPUT_PULLUP);    
@@ -117,3 +131,68 @@ void set_alarm_light_state(bool state)
 {
     _alarm_light_state = state;
 }
+
+#ifdef BUZZER_AVAILABLE
+/**
+ * 
+ */
+void process_buzzer(void)
+{
+    if(_conn_buzzer_cnt > 0)
+    {
+#ifdef DEBUG_BUZZER
+        DEBUG_OUTPUT.println("play connection sound");
+#endif // #ifdef DEBUG_BUZZER
+        tone(BUZZER_PWM_OUTPUT, NOTE_F6);
+        vTaskDelay(200 / portTICK_PERIOD_MS);
+        tone(BUZZER_PWM_OUTPUT, NOTE_F7);
+        vTaskDelay(200 / portTICK_PERIOD_MS);
+        noTone(BUZZER_PWM_OUTPUT);
+
+        _conn_buzzer_cnt -= 1;
+    }
+
+    if(_disconn_buzzer_cnt > 0)
+    {
+#ifdef DEBUG_BUZZER
+        DEBUG_OUTPUT.println("play disconnection sound");
+#endif // #ifdef DEBUG_BUZZER
+        tone(BUZZER_PWM_OUTPUT, NOTE_F7);
+        vTaskDelay(200 / portTICK_PERIOD_MS);
+        tone(BUZZER_PWM_OUTPUT, NOTE_F6);
+        vTaskDelay(200 / portTICK_PERIOD_MS);
+        noTone(BUZZER_PWM_OUTPUT);
+
+        _disconn_buzzer_cnt -= 1;
+    }
+
+}
+
+/**
+ * 
+ */
+void play_buzzer_sound(BuzzerSounds sound_type)
+{
+    switch(sound_type)
+    {
+        case BUZZ_CONNECTING_REMOTE:
+            if (_conn_buzzer_cnt < MAX_BUZZER_QUEUE)
+            {
+#ifdef DEBUG_BUZZER
+                DEBUG_OUTPUT.println("add connection sound to playlist");
+#endif // #ifdef DEBUG_BUZZER
+                _conn_buzzer_cnt += 1;
+            }
+            break;
+        case BUZZ_DISCONNECTING_REMOTE:
+            if (_disconn_buzzer_cnt < MAX_BUZZER_QUEUE)
+            {
+#ifdef DEBUG_BUZZER
+                DEBUG_OUTPUT.println("add disconnecting sound to playlist");
+#endif // #ifdef DEBUG_BUZZER
+                _disconn_buzzer_cnt += 1;
+            }
+            break;
+    }
+}
+#endif // #ifdef BUZZER_AVAILABLE

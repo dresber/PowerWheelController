@@ -106,17 +106,17 @@ void process_command(char cmd_buffer[])
         {
             if(cmd_buffer[i] == ';')
             {
-#ifdef DEBUG_COMM
+#ifdef DEBUG_COMM_PRINT
                 DEBUG_OUTPUT.println("cmd found");
-#endif // #ifdef DEBUG_COMM
+#endif // #ifdef DEBUG_COMM_PRINT
                 cmd_found = true;
                 break;                   
             }
             else if (cmd_buffer[i] == ' ')
             {
-#ifdef DEBUG_COMM
+#ifdef DEBUG_COMM_PRINT
                 DEBUG_OUTPUT.println("value sep");
-#endif // #ifdef DEBUG_COMM
+#endif // #ifdef DEBUG_COMM_PRINT
                 cmd_found = true;     
             }
             else
@@ -143,9 +143,9 @@ void process_command(char cmd_buffer[])
         {
 #ifdef SAFETY
             trigger_remote_wdg();
-#ifdef DEBUG_COMM
+#ifdef DEBUG_COMM_PRINT
             DEBUG_OUTPUT.println("watchdog triggered");
-#endif // #ifdef DEBUG_COMM
+#endif // #ifdef DEBUG_COMM_PRINT
         }
         else if(cmd_string == "em_stop")
         {
@@ -158,6 +158,9 @@ void process_command(char cmd_buffer[])
         else if(cmd_string == "rem_con")
         {
             set_remote_state(CONTROL);
+#ifdef BUZZER_AVAILABLE
+            play_buzzer_sound(BUZZ_CONNECTING_REMOTE);
+#endif // #ifdef BUZZER_AVAILABLE
 #ifdef DRIVE_CONTROL
             set_remote_control_enabled(true);
 #endif // #ifdef DRIVE_CONTROL
@@ -168,6 +171,9 @@ void process_command(char cmd_buffer[])
         else if (cmd_string == "rem_mon")
         {
             set_remote_state(MONITOR);
+#ifdef BUZZER_AVAILABLE
+            play_buzzer_sound(BUZZ_CONNECTING_REMOTE);
+#endif // #ifdef BUZZER_AVAILABLE
         }
         else if (cmd_string == "rem_off")
         {
@@ -178,6 +184,9 @@ void process_command(char cmd_buffer[])
 #ifdef STEERING_CONTROL
             set_remote_state(false);
 #endif // #ifdef STEERING_CONTROL
+#ifdef BUZZER_AVAILABLE
+            play_buzzer_sound(BUZZ_DISCONNECTING_REMOTE);
+#endif // #ifdef BUZZER_AVAILABLE
 #endif // #ifdef SAFETY
         }
 #ifdef ADDONS_CONTROL
@@ -238,9 +247,9 @@ void process_command(char cmd_buffer[])
     }
     else
     {
-#ifdef DEBUG_COMM
+#ifdef DEBUG_COMM_PRINT
         DEBUG_OUTPUT.println("no command found");
-#endif // #ifdef DEBUG_COMM
+#endif // #ifdef DEBUG_COMM_PRINT
     }
 }
 
@@ -261,9 +270,9 @@ void process_serial_rx(void)
 
         char c = (char)COMM_OUTPUT.read();
 
-#ifdef DEBUG_COMM
+#ifdef DEBUG_COMM_PRINT
         DEBUG_OUTPUT.print(c);
-#endif // #ifdef DEBUG_COMM
+#endif // #ifdef DEBUG_COMM_PRINT
 
         if(c != '\r')
         {

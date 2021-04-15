@@ -8,6 +8,9 @@
 //                  definitions
 // ------------------------------------------------ //
 #define ADDONS_CONTROL
+#ifdef ADDONS_CONTROL
+#define BUZZER_AVAILABLE
+#endif // #ifdef ADDONS_CONTROL
 
 #define CAR_DISPLAY
 
@@ -30,6 +33,11 @@
 #define MAIN_LOOP DEBUG_PIN_1
 #endif //#ifdef DEBUG_MAIN
 
+#define DEBUG_BUZZER
+#ifdef DEBUG_BUZZER
+#define BUZZER_PROCESS_DEBUG_PIN DEBUG_PIN_4
+#endif // #ifdef DEBUG_BUZZER
+
 #define DEBUG_DISPLAY
 #ifdef DEBUG_DISPLAY
 #define DISPLAY_PROCESS_PIN DEBUG_PIN_3
@@ -37,6 +45,7 @@
 
 #define DEBUG_COMM
 #ifdef DEBUG_COMM
+//#define DEBUG_COMM_PRINT
 #define SERIAL_RX_TASK_PIN DEBUG_PIN_2
 #endif // #ifdef DEBUG_COMM
 //#define DEBUG_DISTANCE
