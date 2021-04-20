@@ -72,6 +72,8 @@ DriveDirection get_moving_direction(void);
 int16_t get_actual_speed_level(void);
 int16_t get_actual_speed_pwm_value(void);
 
+bool get_active_collision_warning(void);
+
 void set_moving_direction(DriveDirection direction);
 void increase_speed_level(void);
 void reduce_speed_level(void);
