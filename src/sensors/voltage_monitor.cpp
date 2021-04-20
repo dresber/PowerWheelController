@@ -92,7 +92,7 @@ bool check_if_battery_level_is_ok_to_drive(void)
 
     if (_battery_state == BATTERY_TOO_LOW)
     {
-        if (main_voltage > MIN_ACTIVAtION_VOLTAGE)
+        if (main_voltage > MIN_ACTIVATION_VOLTAGE)
         {
             _battery_state = BATTERY_OK;
             return (true);
