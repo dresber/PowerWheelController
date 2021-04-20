@@ -247,27 +247,32 @@ static void _reduce_speed_level(void)
 
 static void _process_direction_switch(void)
 {
-    if(digitalRead(DIRECTION_FORWARD_INPUT) == LOW)
+    if (_act_speed == 0)
     {
-        if (_actual_direction != DIR_FORWARD)
+        if(digitalRead(DIRECTION_FORWARD_INPUT) == LOW)
         {
-            _forward_speed_level = START_LEVEL_FORWARD;
+            if (_actual_direction != DIR_FORWARD)
+            {
+                _forward_speed_level = START_LEVEL_FORWARD;
+            }
+            _actual_direction = DIR_FORWARD;
+            
         }
-        _actual_direction = DIR_FORWARD;
-    }
-    else if (digitalRead(DIRECTION_BACKWARD_INPUT) == LOW)
-    {
-        if (_actual_direction != DIR_BACKWARD)
+        else if (digitalRead(DIRECTION_BACKWARD_INPUT) == LOW)
         {
-            _backward_speed_level = START_LEVEL_BACKWARD;
+            if (_actual_direction != DIR_BACKWARD)
+            {
+                _backward_speed_level = START_LEVEL_BACKWARD;
+            }
+            _actual_direction = DIR_BACKWARD;
         }
-        _actual_direction = DIR_BACKWARD;
-    }
-    else
-    {
-        _actual_direction = DIR_OFF;
+        else
+        {
+            _actual_direction = DIR_OFF;
+        }
     }
 }
+
 
 static void _process_speed_btns(void)
 {
