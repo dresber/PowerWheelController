@@ -23,6 +23,9 @@
 #ifdef POWER_MONITOR
 #include "sensors/voltage_monitor.h"
 #endif // #ifdef POWER_MONITOR
+#if defined(DISTANCE_SENSOR_FRONT_1) || defined(DISTANCE_SENSOR_FRONT_2) || defined(DISTANCE_SENSOR_BACK)
+#include "sensors/distance.h"
+#endif // #if defined(DISTANCE_SENSOR_FRONT_1) || defined(DISTANCE_SENSOR_FRONT_2) || defined(DISTANCE_SENSOR_BACK)
 #endif // #ifdef REMOTE_PROCESS
 
 // ------------------------------------------------ //
@@ -40,7 +43,7 @@
 // ------------------------------------------------ //
 //                  global vars
 // ------------------------------------------------ //
-
+	
 
 // ------------------------------------------------ //
 //              function prototypes
@@ -322,5 +325,16 @@ void _send_data_to_remote(void)
     send_tx_msg_with_data("act_spd", String(get_actual_speed_level()));
     send_tx_msg_with_data("al_light_state", _convert_bool_to_string(get_alarm_light_state()));
     send_tx_msg_with_data("light_state", _convert_bool_to_string(get_light_state()));
+
+#ifdef DISTANCE_SENSOR_FRONT_1
+    send_tx_msg_with_data("dist_f1", String(get_front_sensor_1_distance_in_cm()));
+#endif // #ifdef DISTANCE_SENSOR_FRONT_1
+#ifdef DISTANCE_SENSOR_FRONT_2
+    send_tx_msg_with_data("dist_f2", String(get_front_sensor_2_distance_in_cm()));
+#endif // #ifdef DISTANCE_SENSOR_FRONT_1
+#ifdef DISTANCE_SENSOR_BACK
+    send_tx_msg_with_data("dist_b", String(get_back_sensor_distance_in_cm()));
+#endif // #ifdef DISTANCE_SENSOR_FRONT_1
+
 }
 #endif // #ifdef REMOTE_PROCESS
