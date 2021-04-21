@@ -40,7 +40,6 @@ static DriveDirection _actual_direction = DIR_OFF;
 
 static MovementState _actual_movement = MOV_STOPPED;
 
-
 // ------------------------------------------------ //
 //              function prototypes
 // ------------------------------------------------ //
@@ -360,14 +359,14 @@ static bool _check_if_way_not_blocked(void)
     if (_actual_direction == DIR_FORWARD)
     {
 #ifdef DISTANCE_SENSOR_FRONT_1
-        if (front_sensor_1.read(CM) < safe_distance)
+        if (get_front_sensor_1_distance_in_cm() < safe_distance)
         {
             return (false);
         }
 #endif // #ifdef DISTANCE_SENSOR_FRONT_1
 
 #ifdef DISTANCE_SENSOR_FRONT_2
-        if (front_sensor_2.read(CM) < safe_distance)
+        if (get_front_sensor_2_distance_in_cm() < safe_distance)
         {
             return (false);
         }
@@ -376,7 +375,7 @@ static bool _check_if_way_not_blocked(void)
     else if (_actual_direction == DIR_BACKWARD)
     {
 #ifdef DISTANCE_SENSOR_BACK
-        if (back_sensor.read(CM) < safe_distance)
+        if (get_back_sensor_distance_in_cm() < safe_distance)
         {
             return (false);
         }
