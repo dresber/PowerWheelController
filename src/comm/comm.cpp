@@ -322,9 +322,10 @@ void _send_data_to_remote(void)
     send_tx_msg_with_data("act_bat", String(get_actual_battery_voltage()/1000));
 #endif // #ifdef POWER_MONITOR
 
-    send_tx_msg_with_data("act_spd", String(get_actual_speed_level()));
+    send_tx_msg_with_data("act_spd_set", String(get_actual_speed_level()));
     send_tx_msg_with_data("al_light_state", _convert_bool_to_string(get_alarm_light_state()));
     send_tx_msg_with_data("light_state", _convert_bool_to_string(get_light_state()));
+    send_tx_msg_with_data("act_spd", String(get_actual_speed_pwm_value()));
 
 #ifdef DISTANCE_SENSOR_FRONT_1
     send_tx_msg_with_data("dist_f1", String(get_front_sensor_1_distance_in_cm()));
