@@ -30,11 +30,12 @@ static bool _collision_warning_active = false;
 static int16_t _forward_speed_level = START_LEVEL_FORWARD;
 static int16_t _backward_speed_level = START_LEVEL_BACKWARD;
 static int16_t _act_speed = 0;
-static int16_t _last_throttle_speed_set = 0;
 
 static int16_t _speed_levels[NR_OF_SPEED_LEVEL] = {SPEED_LEVEL_1, SPEED_LEVEL_2, SPEED_LEVEL_3, SPEED_LEVEL_4};
 
 static int64_t _last_throttle_active = 0;
+
+static uint64_t _last_throttle_speed_set = 0;
 
 static DriveDirection _actual_direction = DIR_OFF;
 
@@ -122,18 +123,7 @@ int16_t get_actual_speed_level(void)
  */
 int16_t get_actual_speed_pwm_value(void)
 {
-    if (_actual_direction == DIR_FORWARD)
-    {
-        return (_speed_levels[_forward_speed_level]);
-    }
-    else if (_actual_direction == DIR_BACKWARD)
-    {
-        return (_speed_levels[_backward_speed_level]);
-    }
-    else
-    {
-        return (0);
-    }
+    return (_act_speed);
 }
 
 /**
@@ -416,7 +406,7 @@ static void _motor_fast_stop(void)
 
 static void _motor_delayed_stop(void)
 {
-    static int64_t last_speed_reduction = 0;
+    static uint64_t last_speed_reduction = 0;
 
     if (_act_speed > SPEED_LEVEL_1)
     {
@@ -454,50 +444,52 @@ static void _motor_delayed_stop(void)
 
 static void _ramp_motor_pwm(void)
 {
-    static int64_t last_increase = 0;
+    static uint64_t last_increase = 0;
     int16_t pwm_pin = 0;
-    int16_t *_speed_level;
+    int16_t _speed_level;
 
     if (_actual_direction == DIR_FORWARD)
     {
+        analogWrite(MOTOR_BACKWARD_PWM, 0);
         pwm_pin = MOTOR_FORWARD_PWM;
-        _speed_level = &_forward_speed_level;
+        _speed_level = _speed_levels[_forward_speed_level];
     }
     else
     {
+        analogWrite(MOTOR_FORWARD_PWM, 0);
         pwm_pin = MOTOR_BACKWARD_PWM;
-        _speed_level = &_backward_speed_level;
+        _speed_level = _speed_levels[_backward_speed_level];
     }
 
-    if (_act_speed < *_speed_level)
+    if (_act_speed < _speed_level)
     {
         if(millis() > (last_increase + ACCELARATION_MILLIS_FOR_5_DUTY_CYCLE))
         {
             last_increase = millis();
 
-            if ((_act_speed + ACCELARATION_DUTY_CYCLE_STEPS) < *_speed_level)
+            if ((_act_speed + ACCELARATION_DUTY_CYCLE_STEPS) < _speed_level)
             {
                 _act_speed += ACCELARATION_DUTY_CYCLE_STEPS;
             }
             else
             {
-                _act_speed = *_speed_level;
+                _act_speed = _speed_level;
             }
         }
     }
-    else if (_act_speed > *_speed_level)
+    else if (_act_speed > _speed_level)
     {
         if(millis() > (last_increase + ACCELARATION_MILLIS_FOR_5_DUTY_CYCLE))
         {
             last_increase = millis();
 
-            if ((_act_speed - ACCELARATION_DUTY_CYCLE_STEPS) > *_speed_level)
+            if ((_act_speed - ACCELARATION_DUTY_CYCLE_STEPS) > _speed_level)
             {
                 _act_speed -= ACCELARATION_DUTY_CYCLE_STEPS;
             }
             else
             {
-                _act_speed = *_speed_level;
+                _act_speed = _speed_level;
             }        
         }
     }

@@ -59,6 +59,7 @@ static void _print_addons_control(void);
 #ifdef DRIVE_CONTROL
 static void _print_speed_control(void);
 static void _print_driving_direction(void);
+static void _print_actual_speed(void);
 #endif // #ifdef DRIVE_CONTROL
 
 #ifdef STEERING_CONTROL
@@ -113,6 +114,7 @@ void update_display(void)
 #ifdef DRIVE_CONTROL
     _print_speed_control();
     _print_driving_direction();
+    _print_actual_speed();
 #endif // #ifdef DRIVE_CONTROL
 
 #ifdef STEERING_CONTROL
@@ -287,14 +289,28 @@ static void _print_driving_direction(void)
             case DIR_FORWARD:
                 lcd.setCursor(3, 0);
                 lcd.print("F");
-//                lcd.write(arrow_forward.char_nr);
                 break;
             case DIR_BACKWARD:
                 lcd.setCursor(3, 2);
                 lcd.print("B");
-//                lcd.write(arrow_back.char_nr);
                 break;
         }
+    }
+}
+
+static void _print_actual_speed(void)
+{
+    static int16_t prev_speed = -1;
+    int16_t act_speed = get_actual_speed_pwm_value();
+
+    if (prev_speed != act_speed)
+    {
+        prev_speed = act_speed;
+
+        lcd.setCursor(7, 1);
+        lcd.print("   ");
+        lcd.setCursor(7, 1);
+        lcd.print(act_speed);
     }
 }
 #endif // #ifdef DRIVE_CONTROL
