@@ -315,7 +315,7 @@ static void _process_motor(void)
             {
                 _collision_warning_active = false;
 
-                _last_throttle_speed_set = millis();
+                _last_throttle_active = millis();
 
                 digitalWrite(MOTOR_BREAK_OUTPUT, LOW);
 
@@ -452,13 +452,13 @@ static void _ramp_motor_pwm(void)
     {
         analogWrite(MOTOR_BACKWARD_PWM, 0);
         pwm_pin = MOTOR_FORWARD_PWM;
-        _speed_level = _speed_levels[_forward_speed_level];
+        _speed_level = _speed_levels[_forward_speed_level-1];
     }
     else
     {
         analogWrite(MOTOR_FORWARD_PWM, 0);
         pwm_pin = MOTOR_BACKWARD_PWM;
-        _speed_level = _speed_levels[_backward_speed_level];
+        _speed_level = _speed_levels[_backward_speed_level-1];
     }
 
     if (_act_speed < _speed_level)
