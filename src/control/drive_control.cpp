@@ -141,9 +141,9 @@ void set_moving_direction(DriveDirection direction)
 {
     if (_remote_controlled == true)
     {
-        if((_actual_direction != direction) && (_actual_direction != DIR_OFF))
+        if((_actual_direction != direction) && (_act_speed != 0))
         {
-            _actual_direction = DIR_OFF;
+            _actual_movement = MOV_STOPPED;
         }
         else
         {
