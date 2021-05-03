@@ -143,7 +143,16 @@ void set_moving_direction(DriveDirection direction)
     {
         if((_actual_direction != direction) && (_act_speed != 0))
         {
-            _actual_movement = MOV_STOPPED;
+            if (direction == DIR_OFF)
+            {
+                _actual_movement = MOV_STOPPED;
+            }
+            else
+            {
+                _motor_fast_stop();
+                _actual_movement = MOV_STOPPED;
+                _actual_direction = DIR_OFF;
+            }
         }
         else
         {
