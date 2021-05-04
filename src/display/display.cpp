@@ -191,6 +191,8 @@ static void _print_power_level(void)
         lcd.setCursor(19, 0);
         lcd.print("%");
         lcd.setCursor(16, 0);
+        lcd.print("   ");
+        lcd.setCursor(16, 0);
         lcd.print(act_power_level);
     }
 
