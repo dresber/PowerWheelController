@@ -318,8 +318,8 @@ void _send_data_to_remote(void)
 {
 
 #ifdef POWER_MONITOR
-    send_tx_msg_with_data("act_pwr", String(get_actual_power_level()));
-    send_tx_msg_with_data("act_bat", String(get_actual_battery_voltage()/1000));
+    send_tx_msg_with_data("act_pwr", String(get_average_power_level()));
+    send_tx_msg_with_data("act_bat", String(get_average_battery_voltage()/1000));
 #endif // #ifdef POWER_MONITOR
 
     send_tx_msg_with_data("act_spd_set", String(get_actual_speed_level()));

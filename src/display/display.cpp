@@ -181,8 +181,8 @@ static void _print_power_level(void)
 {
     static int16_t prev_power_level;
     static int16_t prev_voltage_mv;
-    int16_t act_power_level = get_actual_power_level();
-    int16_t act_voltage_mv = get_actual_battery_voltage();
+    int16_t act_power_level = get_average_power_level();
+    int16_t act_voltage_mv = get_average_battery_voltage();
 
     if (prev_power_level != act_power_level)
     {

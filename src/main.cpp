@@ -38,6 +38,10 @@
 #include "control/steering_control.h"
 #endif // #ifdef STEERING_CONTROL
 
+#ifdef POWER_MONITOR
+#include "sensors/voltage_monitor.h"
+#endif // #ifdef POWER_MONITOR
+
 // ------------------------------------------------ //
 //                  definitions
 // ------------------------------------------------ //
@@ -118,6 +122,10 @@ void display_task(void *pvParameters)
     digitalWrite(DISPLAY_PROCESS_PIN, HIGH);
 #endif // #ifdef DEBUG_DISPLAY
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+
+#ifdef POWER_MONITOR
+    process_battery_voltage_filter();
+#endif // #ifdef POWER_MONITOR
 
     update_display();
 #ifdef DEBUG_DISPLAY
